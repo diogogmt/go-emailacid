@@ -6,3 +6,6 @@ go-emailacid is a [Go](http://golang.org/) client package for accessing the [Ema
 <a href="http://trello.com"><img src="https://www.emailonacid.com/images/logos/white-splat.png" style="height: 80px; margin-bottom: 2em;"></a>
 
 [![GoDoc](https://godoc.org/github.com/diogogmt/go-emailacid?status.png)](https://godoc.org/github.com/diogogmt/go-emailacid)
+
+
+# Note: This client is a work in progress.
