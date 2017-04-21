@@ -44,7 +44,7 @@ clientID := "outlook03"
 _, err := EmailAcidClient.GetTestClientResult(testID, clientID)
 ```
 
-The rest result contains the following information:
+The test result contains the following information:
 ```golang
 type EmailTestResult struct {
 	ID            string                       `json:"id,omitempty"`
