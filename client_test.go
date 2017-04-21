@@ -15,11 +15,17 @@ func TestMain(m *testing.M) {
 	start := time.Now()
 
 	apiKey := os.Getenv("EMAILACID_API_KEY")
+	if apiKey == "" {
+		apiKey = "sandbox"
+	}
 	password := os.Getenv("EMAILACID_PASSWORD")
-	clientTypes := []emailacid.EmailClientType{
-		emailacid.Outlook2003,
-		emailacid.Outlook2010,
-		emailacid.GmailChrome22Win,
+	if password == "" {
+		password = "sandbox"
+	}
+	clientTypes := []emailacid.ClientType{
+		emailacid.Outlook03,
+		emailacid.Outlook10,
+		emailacid.GmailChrome26Win,
 	}
 	EmailAcidClient = emailacid.New(apiKey, password, clientTypes)
 

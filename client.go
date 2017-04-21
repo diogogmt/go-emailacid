@@ -3,19 +3,20 @@ package emailacid
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/url"
 	"path"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/parnurzeal/gorequest"
 	"github.com/pkg/errors"
+	"github.com/pressly/lg"
 )
 
 type EmailAcidClient struct {
 	APIKey      string
 	Password    string
 	url         string
-	ClientTypes []EmailClientType
+	ClientTypes []ClientType
 }
 
 type EmailAcidError struct {
@@ -27,7 +28,13 @@ type EmailAcidErrorBody struct {
 	Message string `json:"message:omitempty"`
 }
 
-func New(APIKey, password string, clientTypes []EmailClientType) *EmailAcidClient {
+func New(APIKey, password string, clientTypes []ClientType, verbose bool) *EmailAcidClient {
+	logger := logrus.New()
+	if verbose {
+		logger.Level = logrus.DebugLevel
+	}
+	lg.DefaultLogger = logger
+	lg.RedirectStdlogOutput(logger)
 	return &EmailAcidClient{
 		APIKey:      APIKey,
 		Password:    password,
@@ -60,18 +67,17 @@ func (client *EmailAcidClient) buildRequest(method, resourcePath string) (*goreq
 	return request, nil
 }
 
-func sendRequest(request *gorequest.SuperAgent, in, out interface{}) error {
+func sendRequest(request *gorequest.SuperAgent, in, out interface{}) (string, error) {
+	lg.Debugf("req [%s] %s", request.Method, request.Url)
 	res, body, errs := request.Send(in).EndStruct(out)
 	if len(errs) != 0 {
-		log.Printf("errors making request: %s", errs)
-		return errs[0]
+		return "", errs[0]
 	}
-	log.Printf("[%d] %s - %s", res.StatusCode, body, out)
+	lg.Debugf("res [%d]", res.StatusCode)
 	if res.StatusCode < 200 || res.StatusCode > 299 {
 		var apiError EmailAcidError
 		json.Unmarshal([]byte(body), &apiError)
-		log.Printf("error: %s", apiError)
-		return errors.Errorf("error making request: %s", apiError.Error.Message)
+		return string(body), errors.Errorf("error making request: %s", apiError.Error.Message)
 	}
-	return nil
+	return string(body), nil
 }
