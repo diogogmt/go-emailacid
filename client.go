@@ -6,10 +6,10 @@ import (
 	"net/url"
 	"path"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/parnurzeal/gorequest"
 	"github.com/pkg/errors"
 	"github.com/pressly/lg"
+	"github.com/sirupsen/logrus"
 )
 
 type EmailAcidClient struct {
