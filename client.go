@@ -9,7 +9,6 @@ import (
 	"github.com/parnurzeal/gorequest"
 	"github.com/pkg/errors"
 	"github.com/pressly/lg"
-	"github.com/sirupsen/logrus"
 )
 
 type EmailAcidClient struct {
@@ -29,12 +28,6 @@ type EmailAcidErrorBody struct {
 }
 
 func New(APIKey, password string, clientTypes []ClientType, verbose bool) *EmailAcidClient {
-	logger := logrus.New()
-	if verbose {
-		logger.Level = logrus.DebugLevel
-	}
-	lg.DefaultLogger = logger
-	lg.RedirectStdlogOutput(logger)
 	return &EmailAcidClient{
 		APIKey:      APIKey,
 		Password:    password,
