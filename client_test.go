@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/diogogmt/go-emailacid"
+	"github.com/pressly/go-emailacid"
 )
 
 var EmailAcidClient *emailacid.EmailAcidClient

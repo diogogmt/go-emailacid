@@ -3,7 +3,7 @@ package emailacid_test
 import (
 	"testing"
 
-	emailacid "github.com/diogogmt/go-emailacid"
+	emailacid "github.com/pressly/go-emailacid"
 )
 
 func TestEmail(t *testing.T) {
