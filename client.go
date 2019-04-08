@@ -6,10 +6,8 @@ import (
 	"net/url"
 	"path"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/parnurzeal/gorequest"
 	"github.com/pkg/errors"
-	"github.com/pressly/lg"
 )
 
 type EmailAcidClient struct {
@@ -29,12 +27,6 @@ type EmailAcidErrorBody struct {
 }
 
 func New(APIKey, password string, clientTypes []ClientType, verbose bool) *EmailAcidClient {
-	logger := logrus.New()
-	if verbose {
-		logger.Level = logrus.DebugLevel
-	}
-	lg.DefaultLogger = logger
-	lg.RedirectStdlogOutput(logger)
 	return &EmailAcidClient{
 		APIKey:      APIKey,
 		Password:    password,
@@ -68,12 +60,10 @@ func (client *EmailAcidClient) buildRequest(method, resourcePath string) (*goreq
 }
 
 func sendRequest(request *gorequest.SuperAgent, in, out interface{}) (string, error) {
-	lg.Debugf("req [%s] %s", request.Method, request.Url)
 	res, body, errs := request.Send(in).EndStruct(out)
 	if len(errs) != 0 {
 		return "", errs[0]
 	}
-	lg.Debugf("res [%d]", res.StatusCode)
 	if res.StatusCode < 200 || res.StatusCode > 299 {
 		var apiError EmailAcidError
 		json.Unmarshal([]byte(body), &apiError)
